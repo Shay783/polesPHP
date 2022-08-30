@@ -2,6 +2,11 @@
 // je récupère en haut de mon passage PHP tout ce qui a été initialisé dans init.php avec en plus tout ce qui a été codé dans fonctions.php
 require_once('include/init.php');
 
+if (isset($_GET['action']) && $_GET['action'] == 'deconnexion') {
+    unset($_SESSION['membre']);
+    header('location:' . URL . 'connexion.php');
+}
+
 // on vérifie si internaute est connecté. Si oui, alors on le redirige vers sa page profil, il n' a rien a faire ici.
 if (internauteConnecte()) {
     header('location:' . URL . 'profil.php');

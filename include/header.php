@@ -2,13 +2,6 @@
 // je récupère en haut de mon passage PHP tout ce qui a été initialisé dans init.php avec en plus tout ce qui a été codé dans fonctions.php
 require_once('include/init.php');
 
-// on vérifie si internaute est connecté. Si oui, alors on le redirige vers sa page profil, il n' a rien a faire ici.
-if (internauteConnecte()) {
-  header('location:' . URL . 'profil.php');
-}
-
-
-
 // si un user se connecte et rempli le formulaire
 if ($_POST) {
   // requete préparée pour comparer les pseudos existants en BDD avec celui renseigné dans le formulaire par le user
@@ -97,7 +90,7 @@ if ($_POST) {
   <!-- links pour les icon bootstrap -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
 
-  <title></title>
+  <title> <?= isset($pageTitle) ? $pageTitle : "La Boutique" ?> </title>
 </head>
 
 <body>
@@ -125,38 +118,39 @@ if ($_POST) {
         </ul>
         <ul class="navbar-nav ml-auto">
           <!-- -------------------------- -->
-
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <button type="button" class="btn btn-outline-success">Espace <strong></strong></button>
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="<?= URL ?>profil.php">Profil </a>
-              <a class="dropdown-item" href="<?= URL ?>panier.php">Panier </a>
-              <a class="dropdown-item" href="<?= URL ?>connexion.php?action=deconnexion">Déconnexion</a>
-            </div>
-          </li>
-
-          <!-- ---------------------------- -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle mr-5" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <button type="button" class="btn btn-outline-success">Espace Membre</button>
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="<?= URL ?>inscription.php"><button class="btn btn-outline-success">Inscription</button></a>
-              <a class="dropdown-item"><button class="btn btn-outline-success" data-toggle="modal" data-target="#connexionModal">
-                  Connexion
-                </button></a>
-              <a class="dropdown-item" href="<?= URL ?>panier.php"><button class="btn btn-outline-success px-4">Panier</button></a>
-            </div>
-          </li>
+          <?php if (internauteConnecte()) : ?>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-outline-success"> <strong> Espace de <?= $_SESSION['membre']['pseudo'] ?> </strong></button>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="<?= URL ?>profil.php">Profil de <?= $_SESSION['membre']['pseudo'] ?> </a>
+                <a class="dropdown-item" href="<?= URL ?>panier.php">Panier de <?= $_SESSION['membre']['pseudo'] ?></a>
+                <a class="dropdown-item" href="<?= URL ?>connexion.php?action=deconnexion">Déconnexion</a>
+              </div>
+            </li>
+          <?php else : ?>
+            <!-- ---------------------------- -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle mr-5" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-outline-success">Espace Membre</button>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="<?= URL ?>inscription.php"><button class="btn btn-outline-success">Inscription</button></a>
+                <a class="dropdown-item"><button class="btn btn-outline-success" data-toggle="modal" data-target="#connexionModal">
+                    Connexion
+                  </button></a>
+                <a class="dropdown-item" href="<?= URL ?>panier.php"><button class="btn btn-outline-success px-4">Panier</button></a>
+              </div>
+            </li>
+          <?php endif; ?>
 
           <!-- ------------------------------------ -->
-
-          <li class="nav-item mr-5">
-            <a class="nav-link" href="admin/index.php"><button type="button" class="btn btn-outline-success">Admin</button></a>
-          </li>
-
+          <?php if (internauteConnecteAdmin()) : ?>
+            <li class="nav-item mr-5">
+              <a class="nav-link" href="admin/index.php"><button type="button" class="btn btn-outline-success">Admin</button></a>
+            </li>
+          <?php endif; ?>
           <!-- ------------------------------------ -->
         </ul>
         <form class="form-inline my-2 my-lg-0">
